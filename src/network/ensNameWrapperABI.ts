@@ -1,4 +1,4 @@
-export const contractAbi = [
+export const ensNameWrapperABI = [
   {
     inputs: [
       {

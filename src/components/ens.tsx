@@ -6,25 +6,14 @@ import {
     useWaitForTransactionReceipt,
     usePublicClient,
 } from "wagmi";
-import { contractAbi } from "../network/contractAbi";
+import { ensNameWrapperABI } from "../network/ensNameWrapperABI";
 import { namehash } from "viem";
 import { addresses } from "../network/addresses";
+import { makeid } from "../utils";
 
 // biome-ignore lint/suspicious/noEmptyInterface: <explanation>
 interface Props {
     // Define your component's props here
-}
-
-function makeid(length: number) {
-    let result = '';
-    const characters = 'abcdef0123456789';
-    const charactersLength = characters.length;
-    let counter = 0;
-    while (counter < length) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
-        counter += 1;
-    }
-    return result;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -34,9 +23,10 @@ const ENSNameWrapper: React.FC<Props> = (_props) => {
     const { data: hash, error, isPending, writeContract } = useWriteContract();
 
     const handleSubmit = () => {
-        // wid key<>value
+        // TODO: Implement your submit logic here
         const key = "wid";
         const value = "1234567";
+        //
         const referralCode = makeid(6);
         //
         const parentNode = namehash("cat.eth");
@@ -44,7 +34,7 @@ const ENSNameWrapper: React.FC<Props> = (_props) => {
         //
         writeContract(
             {
-                abi: contractAbi,
+                abi: ensNameWrapperABI,
                 address: addresses.ensResolverWrapper,
                 functionName: "setSubnodeRecord",
                 args: [
@@ -73,7 +63,7 @@ const ENSNameWrapper: React.FC<Props> = (_props) => {
 
                     writeContract(
                         {
-                            abi: contractAbi,
+                            abi: ensNameWrapperABI,
                             address: addresses.ensResolverWrapper,
                             functionName: "setText",
                             args: [addresses.ensResolver, node, key, value],
