@@ -1,6 +1,6 @@
 import { useAccount, useDisconnect } from "wagmi";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
-import ENSNameWrapper from "./components/ens";
+import Home from "./components/Home";
 import { WorldIdWidget } from "./components/WorldIDWidget";
 import { Tabs, Tab } from "@nextui-org/react";
 import { useState } from "react";
@@ -39,7 +39,7 @@ function App() {
       </div>
       {account.status === "connected" ? (
         selected === "Home" ? (
-          <ENSNameWrapper />
+          <Home />
         ) : (
           <>
             <WorldIdWidget signal="hoge" />

@@ -10,7 +10,7 @@ interface Props {
   // Define your component's props here
 }
 
-const ENSNameWrapper: React.FC<Props> = () => {
+const Home: React.FC<Props> = () => {
   const { data: walletClient } = useWalletClient();
   const publicClient = usePublicClient();
   const { writeContract } = useWriteContract();
@@ -113,4 +113,4 @@ const ENSNameWrapper: React.FC<Props> = () => {
   );
 };
 
-export default ENSNameWrapper;
+export default Home;
