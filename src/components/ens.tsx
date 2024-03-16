@@ -10,6 +10,7 @@ import { ensNameWrapperABI } from "../network/ensNameWrapperABI";
 import { namehash } from "viem";
 import { addresses } from "../network/addresses";
 import { makeid } from "../utils";
+import {Button} from "@nextui-org/react";
 
 // biome-ignore lint/suspicious/noEmptyInterface: <explanation>
 interface Props {
@@ -99,11 +100,11 @@ const ENSNameWrapper: React.FC<Props> = (_props) => {
         });
 
     return (
-        <div>
+        <div style={{ margin: '3%', display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
             {/* Render your component's content here */}
-            <button disabled={isPending} type="submit" onClick={handleSubmit}>
+            <Button color="primary" disabled={isPending} onClick={handleSubmit}>
                 Submit
-            </button>
+            </Button>
 
             {hash && <div>Transaction Hash: {hash}</div>}
             {isConfirming && <div>Waiting for confirmation...</div>}

@@ -11,35 +11,46 @@ function App() {
   const { disconnect } = useDisconnect();
   const [selected, setSelected] = useState("Home");
 
-  if (account.status === "connected") {
-    return (
-      <div>
-        <div
-          style={{
-            height: 150,
-            textAlign: "center",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-            alignItems: "center",
-            backgroundColor: "#ffe8d6",
-          }}
+  return (
+    <div>
+      <div
+        style={{
+          height: 150,
+          textAlign: "center",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          alignItems: "center",
+          backgroundColor: "#ffe8d6",
+        }}
+      >
+        <h2>DeRef</h2>
+        <Tabs
+          variant="underlined"
+          aria-label="Tabs variants"
+          selectedKey={selected}
+          onSelectionChange={(k) => setSelected(k.toString())}
         >
-          <h2>DeRef</h2>
-          <Tabs variant="underlined" aria-label="Tabs variants" 
-        selectedKey={selected}
-        onSelectionChange={(k) => setSelected(k.toString())}>
-            <Tab key="Home" title="Home" />
+          <Tab key="Home" title="Home" />
+          {account.status === "connected" && (
             <Tab key="Profile" title="Profile" />
-          </Tabs>
-        </div>
-        {selected === "Home" ? <ENSNameWrapper /> : <>
-        <WorldIdWidget signal="hoge" />
-              <button onClick={() => disconnect()}>Disconnect</button></>}
+          )}
+        </Tabs>
       </div>
-    );
-  }
-  return <button onClick={() => open()}>Connect</button>;
+      {account.status === "connected" ? (
+        selected === "Home" ? (
+          <ENSNameWrapper />
+        ) : (
+          <>
+            <WorldIdWidget signal="hoge" />
+            <button onClick={() => disconnect()}>Disconnect</button>
+          </>
+        )
+      ) : (
+        <button onClick={() => open()}>Connect</button>
+      )}
+    </div>
+  );
 }
 
 export default App;
