@@ -1,5 +1,6 @@
 import { useAccount, useConnect, useDisconnect } from 'wagmi'
 import { sepolia } from 'viem/chains'
+import ENSNameWrapper from './components/ens'
 
 function App() {
 	const account = useAccount()
@@ -25,6 +26,7 @@ function App() {
 					</button>
 				)}
 				
+				<ENSNameWrapper />
 			</div>
 		)
 	}
