@@ -1,20 +1,18 @@
 import { VerificationLevel, IDKitWidget } from "@worldcoin/idkit";
-import { useState } from "react";
 
 const WORLD_ID_APP_ID = import.meta.env.VITE_WLD_APP_ID!;
 const WORLD_ID_ACTION_ID = import.meta.env.VITE_WLD_ACTION!;
-const VERIFIER_CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_ADDR!;
 
 type Props = {
   signal: string;
+  onProofGenerated: (proof: {
+    merkle_root: string;
+    nullifier_hash: string;
+    proof: string;
+  }) => void;
 };
 
-export const WorldIdWidget = ({ signal }: Props) => {
-  const [proof, setProof] = useState<unknown>(null);
-
-  console.log("proof", proof);
-  console.log("VERIFIER_CONTRACT_ADDRESS", VERIFIER_CONTRACT_ADDRESS);
-
+export const WorldIdWidget = ({ signal, onProofGenerated }: Props) => {
   return (
     <IDKitWidget
       app_id={WORLD_ID_APP_ID as `app_${string}`}
@@ -25,7 +23,7 @@ export const WorldIdWidget = ({ signal }: Props) => {
       }}
       handleVerify={(proof) => {
         console.log("debug::handleVerify", JSON.stringify(proof));
-        setProof(proof);
+        onProofGenerated(proof);
       }}
       verification_level={VerificationLevel.Device}
     >
