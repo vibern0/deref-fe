@@ -1,0 +1,36 @@
+{
+  "name": "dapp",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "lint": "biome check .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.25.0",
+    "axios": "^1.6.7",
+    "buffer": "^6.0.3",
+    "randombytes": "^2.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "viem": "2.x",
+    "wagmi": "^2.5.7"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.5.3",
+    "@types/randombytes": "^2.0.3",
+    "@types/react": "^18.2.56",
+    "@types/react-dom": "^18.2.19",
+    "@typescript-eslint/eslint-plugin": "^7.0.2",
+    "@typescript-eslint/parser": "^7.0.2",
+    "@vitejs/plugin-react": "^4.2.1",
+    "eslint": "^8.56.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.5",
+    "typescript": "^5.2.2",
+    "vite": "^5.1.4"
+  }
+}
