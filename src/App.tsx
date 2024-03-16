@@ -1,12 +1,12 @@
-import { useAccount, useConnect, useDisconnect } from "wagmi";
-import { sepolia } from "viem/chains";
-import ENSNameWrapper from "./components/ens";
+import { useAccount, useDisconnect } from 'wagmi'
+import { useWeb3Modal } from '@web3modal/wagmi/react'
+import ENSNameWrapper from './components/ens'
 import { WorldIdWidget } from "./components/WorldIDWidget";
 
 function App() {
-  const account = useAccount();
-  const { connectors, connect, status, error } = useConnect();
-  const { disconnect } = useDisconnect();
+	const account = useAccount()
+	const { open } = useWeb3Modal()
+	const { disconnect } = useDisconnect()
 
   if (account.status === "connected") {
     return (
@@ -27,29 +27,12 @@ function App() {
           </button>
         )}
 
-        <ENSNameWrapper />
+				<ENSNameWrapper />
         <WorldIdWidget signal="hoge" />
-      </div>
-    );
+			</div>
+		);
   }
-
-  return (
-    <div>
-      <h2>Connect</h2>
-      {connectors.map((connector) => (
-        <button
-          key={connector.uid}
-          onClick={() => connect({ connector, chainId: sepolia.id })}
-          type="button"
-        >
-          {connector.name}
-        </button>
-      ))}
-      <div>{status}</div>
-      <div>{error?.message}</div>
-      <WorldIdWidget signal="hoge" />
-    </div>
-  );
+	return <button onClick={() => open()}>Connect</button>
 }
 
 export default App;

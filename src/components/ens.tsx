@@ -65,7 +65,7 @@ const ENSNameWrapper: React.FC<Props> = (_props) => {
                     console.log("onSettled", data);
 
                     // NOTE: this takes a long time to resolve
-                    const tx = await publicClient.waitForTransactionReceipt({
+                    const tx = await publicClient!.waitForTransactionReceipt({
                         hash: data!,
                     });
 
