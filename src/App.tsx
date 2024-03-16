@@ -1,52 +1,55 @@
-import { useAccount, useConnect, useDisconnect } from 'wagmi'
-import { sepolia } from 'viem/chains'
-import ENSNameWrapper from './components/ens'
+import { useAccount, useConnect, useDisconnect } from "wagmi";
+import { sepolia } from "viem/chains";
+import ENSNameWrapper from "./components/ens";
+import { WorldIdWidget } from "./components/WorldIDWidget";
 
 function App() {
-	const account = useAccount()
-	const { connectors, connect, status, error } = useConnect()
-	const { disconnect } = useDisconnect()
+  const account = useAccount();
+  const { connectors, connect, status, error } = useConnect();
+  const { disconnect } = useDisconnect();
 
-	if (account.status === 'connected') {
-		return (
-			<div>
-				<h2>Account</h2>
+  if (account.status === "connected") {
+    return (
+      <div>
+        <h2>Account</h2>
 
-				<div>
-					status: {account.status}
-					<br />
-					addresses: {JSON.stringify(account.addresses)}
-					<br />
-					chainId: {account.chainId}
-				</div>
+        <div>
+          status: {account.status}
+          <br />
+          addresses: {JSON.stringify(account.addresses)}
+          <br />
+          chainId: {account.chainId}
+        </div>
 
-				{account.status === 'connected' && (
-					<button type="button" onClick={() => disconnect()}>
-						Disconnect
-					</button>
-				)}
-				
-				<ENSNameWrapper />
-			</div>
-		)
-	}
+        {account.status === "connected" && (
+          <button type="button" onClick={() => disconnect()}>
+            Disconnect
+          </button>
+        )}
 
-	return (
-		<div>
-			<h2>Connect</h2>
-			{connectors.map((connector) => (
-				<button
-					key={connector.uid}
-					onClick={() => connect({ connector, chainId: sepolia.id })}
-					type="button"
-				>
-					{connector.name}
-				</button>
-			))}
-			<div>{status}</div>
-			<div>{error?.message}</div>
-		</div>
-	)
+        <ENSNameWrapper />
+        <WorldIdWidget signal="hoge" />
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <h2>Connect</h2>
+      {connectors.map((connector) => (
+        <button
+          key={connector.uid}
+          onClick={() => connect({ connector, chainId: sepolia.id })}
+          type="button"
+        >
+          {connector.name}
+        </button>
+      ))}
+      <div>{status}</div>
+      <div>{error?.message}</div>
+      <WorldIdWidget signal="hoge" />
+    </div>
+  );
 }
 
-export default App
+export default App;
