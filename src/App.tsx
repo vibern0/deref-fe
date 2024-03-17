@@ -24,7 +24,7 @@ function App() {
           backgroundColor: "#ffe8d6",
         }}
       >
-        <h2 style={{ fontSize: 35 }} >DeRef</h2>
+        <h2 style={{ fontSize: 35 }} >DeRefer</h2>
         <Tabs
           variant="underlined"
           aria-label="Tabs variants"
@@ -46,7 +46,7 @@ function App() {
               margin: "3%",
             }}
           >
-            <WorldIdWidget signal="2024" />
+            <WorldIdWidget signal="2025" />
             <br />
             <br />
             <Button color="danger" onClick={() => disconnect()}>
@@ -55,7 +55,9 @@ function App() {
           </div>
         )
       ) : (
-        <button onClick={() => open()}>Connect</button>
+        <div style={{ margin: '3%' }}>
+          <Button color="primary" onClick={() => open()}>Connect</Button>
+        </div>
       )}
     </div>
   );

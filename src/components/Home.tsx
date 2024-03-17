@@ -35,12 +35,14 @@ const Home: React.FC<Props> = () => {
   // const callSendWithdraw = useSendWithdraw();
 
   useEffect(() => {
-    db.getAll().then((wc) => {
+    db.getAll().then((wc_) => {
+      const wc = wc_.filter((w) => w.user_address === walletClient?.account.address);
       setHasEntry(wc.length > 0);
-      setWorldcoinEntry(wc[0]);
-      setRootHash(wc[0]?.merkle_root);
+      setWorldcoinEntry( wc[0]);
+      setRootHash( wc[0]?.merkle_root);
     });
-    dbReferrals.getAll().then((ref) => {
+    dbReferrals.getAll().then((ref_) => {
+      const ref = ref_.filter((r) => r.user_address === walletClient?.account.address);
       setReferralCodes(ref.map((r) => r.code));
     });
   }, []);
@@ -56,7 +58,7 @@ const Home: React.FC<Props> = () => {
     setUsingReferral(true);
     // generate proof
 
-    const originalReferral = referralCodeInput+'0000000000';
+    const originalReferral = referralCodeInput + "0000000000";
     const hashedReferral = keccak256(
       ("0x" + originalReferral) as `0x${string}`
     ).slice(
@@ -77,8 +79,9 @@ const Home: React.FC<Props> = () => {
 
     // call contract
 
-    await callSendRefer("2024", worldcoinEntry, publicInputs, proof);
-    // await callSendWithdraw("2024", worldcoinEntry!);
+    await callSendRefer("2025", worldcoinEntry, publicInputs, proof);
+    // await callSendWithdraw("2025", worldcoinEntry!);
+    setUsingReferral(false);
   };
 
   const handleSubmit = () => {
@@ -128,7 +131,7 @@ const Home: React.FC<Props> = () => {
                 await publicClient!.waitForTransactionReceipt({
                   hash: data!,
                 });
-                dbReferrals.add({ code: referralCode });
+                dbReferrals.add({ user_address: walletClient?.account.address, code: referralCode });
                 setSubmitting(false);
                 setSubStep(0);
               },
@@ -162,18 +165,6 @@ const Home: React.FC<Props> = () => {
       >
         Generate
       </Button>
-      {referralCodes.length > 0 && (
-        <>
-          <br />
-          <br />
-          <h1 style={{ fontSize: 19 }}>Referral Codes</h1>
-        </>
-      )}
-      <ul>
-        {referralCodes.map((code) => (
-          <li key={code}>{code}</li>
-        ))}
-      </ul>
       {submitting && (
         <>
           <br />
@@ -187,6 +178,18 @@ const Home: React.FC<Props> = () => {
           />
         </>
       )}
+      {referralCodes.length > 0 && (
+        <>
+          <br />
+          <br />
+          <h1 style={{ fontSize: 19 }}>Referral Codes</h1>
+        </>
+      )}
+      <ul>
+        {referralCodes.map((code) => (
+          <li key={code}>{code}</li>
+        ))}
+      </ul>
       <br />
       <br />
       <h1 style={{ fontSize: 19 }}>Use Referral</h1>
@@ -197,6 +200,7 @@ const Home: React.FC<Props> = () => {
         onChange={(e) => setReferralCodeInput(e.target.value)}
         placeholder="Use a referral code"
       />
+      <br />
       <Button
         color="primary"
         isLoading={usingReferral}
