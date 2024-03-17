@@ -7,6 +7,7 @@ import { makeid } from "../utils";
 import { Button, Progress, Input } from "@nextui-org/react";
 import { useIndexedDB } from "react-indexed-db-hook";
 import { useSendRefer } from "../hooks/useSendRefer";
+// import { useSendWithdraw } from "../hooks/useSendWithdraw";
 import { generateProof } from "../circuit";
 
 interface Props {
@@ -31,6 +32,7 @@ const Home: React.FC<Props> = () => {
   const [referralCodeInput, setReferralCodeInput] = useState<string>("");
   const [usingReferral, setUsingReferral] = useState(false);
   const callSendRefer = useSendRefer();
+  // const callSendWithdraw = useSendWithdraw();
 
   useEffect(() => {
     db.getAll().then((wc) => {
@@ -54,7 +56,7 @@ const Home: React.FC<Props> = () => {
     setUsingReferral(true);
     // generate proof
 
-    const originalReferral = referralCodeInput;
+    const originalReferral = referralCodeInput+'0000000000';
     const hashedReferral = keccak256(
       ("0x" + originalReferral) as `0x${string}`
     ).slice(
@@ -66,16 +68,17 @@ const Home: React.FC<Props> = () => {
     const resultBytes = Array.from(convertToBytes(hashedReferral));
 
     const { proof, publicInputs } = await generateProof({
-      x: [...new Array(Math.max(0, 8 - xBytes.length)).fill(0), ...xBytes],
+      x: [...xBytes],
       result: [
-        ...new Array(Math.max(0, 32 - resultBytes.length)).fill(0),
         ...resultBytes,
+        ...new Array(Math.max(0, 32 - resultBytes.length)).fill(0),
       ],
     });
 
     // call contract
 
-    await callSendRefer("hoge", worldcoinEntry, publicInputs, proof);
+    await callSendRefer("2024", worldcoinEntry, publicInputs, proof);
+    // await callSendWithdraw("2024", worldcoinEntry!);
   };
 
   const handleSubmit = () => {

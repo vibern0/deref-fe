@@ -46,7 +46,7 @@ function App() {
               margin: "3%",
             }}
           >
-            <WorldIdWidget signal="hoge" />
+            <WorldIdWidget signal="2024" />
             <br />
             <br />
             <Button color="danger" onClick={() => disconnect()}>
