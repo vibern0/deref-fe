@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useWriteContract, useWalletClient, usePublicClient } from "wagmi";
 import { ensNameWrapperABI } from "../network/ensNameWrapperABI";
-import { namehash } from "viem";
+import { keccak256, namehash } from "viem";
 import { addresses } from "../network/addresses";
 import { makeid } from "../utils";
 import { Button, Progress, Input } from "@nextui-org/react";
 import { useIndexedDB } from "react-indexed-db-hook";
+import {useSendRefer} from "../hooks/useSendRefer";
+import { generateProof } from "../circuit";
 
 interface Props {
   // Define your component's props here
 }
+
+const convertToBytes = (input: string) => new Uint8Array(Buffer.from(input, 'hex'));
 
 const Home: React.FC<Props> = () => {
   const db = useIndexedDB("worldcoin");
@@ -20,12 +24,17 @@ const Home: React.FC<Props> = () => {
   const [submitting, setSubmitting] = React.useState(false);
   const [subStep, setSubStep] = React.useState(0);
   const [hasEntry, setHasEntry] = useState(false);
+  const [worldcoinEntry, setWorldcoinEntry] = useState(null);
   const [rootHash, setRootHash] = useState<string>("");
   const [referralCodes, setReferralCodes] = useState<string[]>([]);
+  const [referralCodeInput, setReferralCodeInput] = useState<string>("");
+  const [usingReferral, setUsingReferral] = useState(false);
+  const callSendRefer = useSendRefer();
 
   useEffect(() => {
     db.getAll().then((wc) => {
       setHasEntry(wc.length > 0);
+      setWorldcoinEntry(wc[0]);
       setRootHash(wc[0]?.merkle_root);
     });
     dbReferrals.getAll().then((ref) => {
@@ -35,6 +44,33 @@ const Home: React.FC<Props> = () => {
 
   if (!hasEntry) {
     return <p>You have not verified World ID</p>;
+  }
+
+  const handleUseReferral = async () => {
+    if (!worldcoinEntry) {
+      return;
+    }
+    setUsingReferral(true);
+    // generate proof
+
+    const originalReferral = referralCodeInput+'0000000000';
+    const hashedReferral = keccak256(originalReferral as `0x${string}`);
+
+    console.log(Array.from(convertToBytes(originalReferral)).length);
+
+    const { proof, publicInputs } = await generateProof({
+      x: Array.from(convertToBytes(originalReferral)),
+      result: Array.from(convertToBytes(hashedReferral)),
+    });
+
+    // call contract
+
+    await callSendRefer(
+      'hoge',
+      worldcoinEntry,
+      publicInputs,
+      proof
+    )
   }
 
   const handleSubmit = () => {
@@ -109,7 +145,7 @@ const Home: React.FC<Props> = () => {
         margin: "3%",
       }}
     >
-      <h1>Generate Referral</h1>
+      <h1 style={{ fontSize: 19 }}>Generate Referral</h1>
       <Button
         color="primary"
         isLoading={submitting}
@@ -122,7 +158,7 @@ const Home: React.FC<Props> = () => {
         <>
           <br />
           <br />
-          <h1>Referral Codes</h1>
+          <h1 style={{ fontSize: 19 }}>Referral Codes</h1>
         </>
       )}
       <ul>
@@ -145,8 +181,16 @@ const Home: React.FC<Props> = () => {
       )}
       <br />
       <br />
-      <h1>Use Referral</h1>
-      <Input type="text" label="Referral" placeholder="Use a referral code" />
+      <h1 style={{ fontSize: 19 }}>Use Referral</h1>
+      <Input type="text" label="Referral" value={referralCodeInput} onChange={(e) => setReferralCodeInput(e.target.value)} placeholder="Use a referral code" />
+      <Button
+        color="primary"
+        isLoading={usingReferral}
+        disabled={usingReferral}
+        onClick={handleUseReferral}
+      >
+        Use Referral
+      </Button>
     </div>
   );
 };

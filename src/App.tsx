@@ -24,7 +24,7 @@ function App() {
           backgroundColor: "#ffe8d6",
         }}
       >
-        <h2>DeRef</h2>
+        <h2 style={{ fontSize: 35 }} >DeRef</h2>
         <Tabs
           variant="underlined"
           aria-label="Tabs variants"
@@ -41,10 +41,18 @@ function App() {
         selected === "Home" ? (
           <Home />
         ) : (
-          <>
+          <div
+            style={{
+              margin: "3%",
+            }}
+          >
             <WorldIdWidget signal="hoge" />
-            <Button color="danger" onClick={() => disconnect()}>Disconnect</Button>
-          </>
+            <br />
+            <br />
+            <Button color="danger" onClick={() => disconnect()}>
+              Disconnect
+            </Button>
+          </div>
         )
       ) : (
         <button onClick={() => open()}>Connect</button>

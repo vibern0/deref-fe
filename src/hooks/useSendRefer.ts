@@ -6,7 +6,7 @@ import { decodeAbiParameters } from "viem";
 const VERIFIER_CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_ADDR!;
 
 export const useSendRefer = () => {
-  const { writeContract } = useWriteContract({
+  const { writeContractAsync } = useWriteContract({
     mutation: {
       onError: console.log,
     },
@@ -25,7 +25,7 @@ export const useSendRefer = () => {
       zkPublicInputs: string[],
       zkProof: string
     ) => {
-      return writeContract({
+      return writeContractAsync({
         abi: ContractAbi,
         address: VERIFIER_CONTRACT_ADDRESS as `0x${string}`,
         functionName: "refer",
@@ -42,6 +42,6 @@ export const useSendRefer = () => {
         ],
       });
     },
-    [writeContract]
+    [writeContractAsync]
   );
 };
