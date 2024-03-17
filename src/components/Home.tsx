@@ -6,14 +6,15 @@ import { addresses } from "../network/addresses";
 import { makeid } from "../utils";
 import { Button, Progress, Input } from "@nextui-org/react";
 import { useIndexedDB } from "react-indexed-db-hook";
-import {useSendRefer} from "../hooks/useSendRefer";
+import { useSendRefer } from "../hooks/useSendRefer";
 import { generateProof } from "../circuit";
 
 interface Props {
   // Define your component's props here
 }
 
-const convertToBytes = (input: string) => new Uint8Array(Buffer.from(input, 'hex'));
+const convertToBytes = (input: string) =>
+  new Uint8Array(Buffer.from(input, "hex"));
 
 const Home: React.FC<Props> = () => {
   const db = useIndexedDB("worldcoin");
@@ -53,25 +54,29 @@ const Home: React.FC<Props> = () => {
     setUsingReferral(true);
     // generate proof
 
-    const originalReferral = referralCodeInput+'0000000000';
-    const hashedReferral = keccak256(originalReferral as `0x${string}`);
+    const originalReferral = referralCodeInput;
+    const hashedReferral = keccak256(
+      ("0x" + originalReferral) as `0x${string}`
+    ).slice(
+      // remove 0x
+      2
+    );
 
-    console.log(Array.from(convertToBytes(originalReferral)).length);
+    const xBytes = Array.from(convertToBytes(originalReferral));
+    const resultBytes = Array.from(convertToBytes(hashedReferral));
 
     const { proof, publicInputs } = await generateProof({
-      x: Array.from(convertToBytes(originalReferral)),
-      result: Array.from(convertToBytes(hashedReferral)),
+      x: [...new Array(Math.max(0, 8 - xBytes.length)).fill(0), ...xBytes],
+      result: [
+        ...new Array(Math.max(0, 32 - resultBytes.length)).fill(0),
+        ...resultBytes,
+      ],
     });
 
     // call contract
 
-    await callSendRefer(
-      'hoge',
-      worldcoinEntry,
-      publicInputs,
-      proof
-    )
-  }
+    await callSendRefer("hoge", worldcoinEntry, publicInputs, proof);
+  };
 
   const handleSubmit = () => {
     setSubmitting(true);
@@ -182,7 +187,13 @@ const Home: React.FC<Props> = () => {
       <br />
       <br />
       <h1 style={{ fontSize: 19 }}>Use Referral</h1>
-      <Input type="text" label="Referral" value={referralCodeInput} onChange={(e) => setReferralCodeInput(e.target.value)} placeholder="Use a referral code" />
+      <Input
+        type="text"
+        label="Referral"
+        value={referralCodeInput}
+        onChange={(e) => setReferralCodeInput(e.target.value)}
+        placeholder="Use a referral code"
+      />
       <Button
         color="primary"
         isLoading={usingReferral}
