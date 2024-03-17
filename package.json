@@ -20,6 +20,7 @@
     "randombytes": "^2.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-indexed-db-hook": "^1.0.14",
     "viem": "^2.8.10",
     "wagmi": "^2.5.7"
   },

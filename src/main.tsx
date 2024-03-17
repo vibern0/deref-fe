@@ -7,11 +7,15 @@ import { config } from "./network/wagmi.ts";
 import { Buffer } from "buffer";
 import App from "./App.tsx";
 import { NextUIProvider } from "@nextui-org/react";
+import { DBConfig } from "./utils/dbconfig.ts";
+import { initDB } from "react-indexed-db-hook";
 import "./index.css";
 
 globalThis.Buffer = Buffer;
 
 const queryClient = new QueryClient();
+
+initDB(DBConfig);
 
 // biome-ignore lint/style/noNonNullAssertion: <explanation>
 ReactDOM.createRoot(document.getElementById("root")!).render(

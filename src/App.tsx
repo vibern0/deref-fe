@@ -2,7 +2,7 @@ import { useAccount, useDisconnect } from "wagmi";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 import Home from "./components/Home";
 import { WorldIdWidget } from "./components/WorldIDWidget";
-import { Tabs, Tab } from "@nextui-org/react";
+import { Tabs, Tab, Button } from "@nextui-org/react";
 import { useState } from "react";
 
 function App() {
@@ -43,7 +43,7 @@ function App() {
         ) : (
           <>
             <WorldIdWidget signal="hoge" />
-            <button onClick={() => disconnect()}>Disconnect</button>
+            <Button color="danger" onClick={() => disconnect()}>Disconnect</Button>
           </>
         )
       ) : (
